@@ -1,0 +1,24 @@
+venv/
+myvenv/
+__pycache__/
+*.pyc
+.env
+
+# Logs
+*.log
+logs/
+
+# Non-runtime / archive code
+legacy/
+scraper/
+
+# Local caches
+.pytest_cache/
+.mypy_cache/
+
+# Data folders not required for backend runtime deploy
+data/raw/
+data/scraped/
+data/cleaned/
+data/chunks/
+data/chromadb_backup_*/
