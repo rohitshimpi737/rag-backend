@@ -16,6 +16,16 @@ ACTIVE_LLM_PROVIDER = os.getenv("ACTIVE_LLM_PROVIDER", "groq").strip().lower()
 RETRIEVAL_K = int(os.getenv("RETRIEVAL_K", "20"))
 RERANK_TOP_N = int(os.getenv("RERANK_TOP_N", "5"))
 
+
+def _get_bool_env(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+PRELOAD_RERANKER_ON_STARTUP = _get_bool_env("PRELOAD_RERANKER_ON_STARTUP", False)
+
 BGE_QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 RERANKER_MODEL = os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
 

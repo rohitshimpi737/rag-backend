@@ -13,7 +13,12 @@ from backend.schemas import (
     RetrieveResponse,
     SourceResult,
 )
-from backend.config import ACTIVE_EMBEDDING_PROVIDER, ACTIVE_LLM_PROVIDER, LLM_SPECS
+from backend.config import (
+    ACTIVE_EMBEDDING_PROVIDER,
+    ACTIVE_LLM_PROVIDER,
+    LLM_SPECS,
+    PRELOAD_RERANKER_ON_STARTUP,
+)
 from backend.generation_service import generate
 from backend.reranker import get_reranker
 from backend.retrieval_service import retrieve
@@ -31,11 +36,13 @@ async def lifespan(_: FastAPI):
     )
     logger.info("Starting PrabhupadaGPT FastAPI backend...")
 
-    # Warm up reranker once at startup for lower first-query latency
-    try:
-        get_reranker()
-    except Exception as exc:
-        logger.warning(f"Reranker preload skipped: {exc}")
+    if PRELOAD_RERANKER_ON_STARTUP:
+        try:
+            get_reranker()
+        except Exception as exc:
+            logger.warning(f"Reranker preload skipped: {exc}")
+    else:
+        logger.info("Reranker preload disabled at startup.")
 
     yield
 
